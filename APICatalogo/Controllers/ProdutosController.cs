@@ -1,6 +1,7 @@
 ﻿using ApiCatalogo.DTOs;
 using ApiCatalogo.Repository;
 using APICatalogo.Models;
+using APICatalogo.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace ApiCatalogo.Controllers
 
         // api/produtos
         [HttpGet]
-        public ActionResult<IEnumerable<ProdutoDTO>> Get()
+        public ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters produtosParameters)
         {
-            var produtos = _uof.ProdutoRepository.Get().ToList();
+            var produtos = _uof.ProdutoRepository.GetProdutos(produtosParameters).ToList();
 
             var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
             return produtosDto;
