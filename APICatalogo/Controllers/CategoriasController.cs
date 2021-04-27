@@ -3,16 +3,18 @@ using ApiCatalogo.Repository;
 using APICatalogo.Models;
 using APICatalogo.Pagination;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiCatalogo.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[Controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase
@@ -26,10 +28,32 @@ namespace ApiCatalogo.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
+        [HttpGet("teste")]
+        public string GetTeste()
+        {
+            return $"CategoriasController - {DateTime.Now.ToLongDateString().ToString()}";
+        }
+        
         [HttpGet("produtos")]
         public async Task<ActionResult<IEnumerable<CategoriaDTO>>> GetCategoriasProdutos()
         {
             var categorias = await _context.CategoriaRepository.GetCategoriasProdutos();
+            var categoriasDto = _mapper.Map<List<CategoriaDTO>>(categorias);
+            return categoriasDto;
+        }
+
+        [HttpGet("paginacao")]
+        public ActionResult<IEnumerable<CategoriaDTO>> GetPaginacao(int pag = 1, int reg = 5)
+        {
+            var categorias = _context.CategoriaRepository.LocalizaPagina<Categoria>(pag, reg).ToList();
+
+            var totalDeRegistros = _context.CategoriaRepository.GetTotalRegistros();
+            var numeroPaginas = ((int)Math.Ceiling((double)totalDeRegistros / reg));
+
+            Response.Headers["X-Total-Registros"] = totalDeRegistros.ToString();
+            Response.Headers["X-Numero-Paginas"] = numeroPaginas.ToString();
+
             var categoriasDto = _mapper.Map<List<CategoriaDTO>>(categorias);
             return categoriasDto;
         }

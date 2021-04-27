@@ -36,11 +36,18 @@ namespace APICatalogo
         {
             //services.AddCors();
 
+            //services.AddCors(opt =>
+            //{
+            //    opt.AddPolicy("PermitirQualquerOrigem",
+            //        builder =>
+            //        builder.AllowAnyOrigin());
+            //});
+
             services.AddCors(opt =>
             {
-                opt.AddPolicy("PermitirQualquerOrigem",
+                opt.AddPolicy("EnableCORS",
                     builder =>
-                    builder.AllowAnyOrigin());
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().Build());
             });
 
             var mappingConfig = new MapperConfiguration(mc =>
@@ -97,7 +104,8 @@ namespace APICatalogo
             app.UseAuthorization();
 
             //app.UseCors(opt => opt.AllowAnyOrigin());
-            app.UseCors();
+            //app.UseCors();
+            app.UseCors("EnableCORS");
 
             app.UseEndpoints(endpoints =>
             {
