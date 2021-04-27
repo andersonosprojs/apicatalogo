@@ -1,6 +1,6 @@
 # Apicatalogo
  - Esta api disponibiliza um catálogo de categorias e seus respectivos produtos.
- - Tem um objetivo didático, aprimoramento de conhecimentos e boas práticas.
+ - Tem um objetivo didático - aprimoramento de conhecimentos e boas práticas.
 
 # Tópicos abordados:
  - Conexão a banco de dados (mysql)
